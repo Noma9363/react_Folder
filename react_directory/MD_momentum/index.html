@@ -7,27 +7,43 @@
     <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
-        let counter = 0;
         const root = document.getElementById("root");
-        const Title = (
-            <h3 
-                id="title" 
-                onMouseEnter={() => console.log("mouse endter!")}
-            >
-            Hello I'm a title
-            </h3>
-        );
-        const Button = (
-            <button style={{
-                backgroundColor : "tomato",
-                }} onClick={() => console.log("clicked!")}
-            >
-                Click Me!
-            </button>
-        );
-        const container = React.createElement("div", null, [Title, Button]);
-        ReactDOM.render(container, root);
-        console.log("this is commit ver2");
-        // this is ver2 dsdsdsd
+        function App() {
+            const [minutes, setMinutes] = React.useState(0);
+            const onChange = (e) => {
+                setMinutes(e.target.value);
+            }
+            const reset = () => setMinutes(0);
+
+
+            return (
+                <div>
+                    <h1>Super Converter</h1>
+                    <div>
+                        <label htmlFor="minutes">Minutes</label>
+                        <input 
+                        value={minutes} 
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number"
+                        onChange={onChange}
+                        />    
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="minutes">Hours</label>
+                        <input 
+                        value={Math.round(minutes / 60)} 
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number"
+                        disabled
+                        />
+                    </div>
+                    <button onClick={reset}>리셋</button>
+                </div>
+            );
+        } 
+        ReactDOM.render(<App />, root);
     </script>
 </html>
