@@ -85,7 +85,7 @@ function App() {
           <button onClick={onClick}>trans</button>
           <p>
             {usdloading ?
-              <span>You can buy {transCoin} coin!</span> : 
+              <span>You can buy {transCoin} coin for a {usd}</span> : 
               LIST_LOAD_ERROR
             }
           </p>
