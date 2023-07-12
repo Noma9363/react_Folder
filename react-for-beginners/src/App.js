@@ -1,11 +1,13 @@
 // coin
 import { useEffect, useState } from "react";
 function App() {
+  const LIST_LOAD_ERROR = "not trased yet... :<";
   const [idx, setIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [usdloading, setUsdLoading] = useState(false);
   const [coins, setCoins] = useState([]);
-  const [usd, setUsd] = useState(0);
+  const [usd, setUsd] = useState("");
+  const [transCoin, setTransCoin] = useState(0);
   const onCahnge = (e) =>{
     // findIndex -> 객체.findIndex(임시변수 => 임시변수.체크할영역(id) == 깂 비교)
     // console.log(coins.findIndex(i => i.id == e.target.value));
@@ -13,6 +15,27 @@ function App() {
     console.log(i);
     setIdx(i);
     
+  }
+  const keyInputChange = (e) => {
+    setUsd(e.target.value);
+    // console.log(usd);
+    // console.log(e.target.value);
+    // console.log(typeof e.target.value);
+  }
+  // 앱 전용 함수 : 최종적으로 값 변환하기
+  const onClick = (e) => {
+    e.preventDefault();
+    if(usd != ""){
+      let usdTemp = parseInt(usd);
+      console.log(typeof usdTemp)
+      console.log(usdTemp);
+      console.log(coins[idx].quotes.USD.price);
+      let resultTrans = ((1 / coins[idx].quotes.USD.price) * usdTemp);
+      // ㄴ 환전 1 / USD 값 coins[idx].quotes.USD.price
+      setTransCoin(resultTrans);
+      console.log(resultTrans);
+      setUsdLoading(true);
+    }else setUsdLoading(false);
   }
   useEffect(() => {
     // url이 싱행되면 -> 응답받은 값 . json()으로 변환 -> coins 변수를 바꾸기위해 setCoins함수에 json 넣음
@@ -22,7 +45,12 @@ function App() {
       .then((response) => response.json())
       .then((json) => {
         setCoins(json);
-        setLoading(false);
+        setLoading(false); 
+        {
+          // idx check : console
+          setIdx(0);
+          console.log(idx);
+        }
       });
   }, [])
   return (
@@ -38,16 +66,30 @@ function App() {
           }
         </select>}
       <form>
-        <h2>You Got $20</h2>
-        {!usdloading ? 
-          <p>pick coin to transitions</p> : 
+        <h2>
+          {
+            !usdloading ? 
+              "wanna trans USD to Coin? Please Enter next input" 
+              : 
+              "transaction Completed!"
+          }
+        </h2>
+        <div>
+          <input 
+            type="number"
+            value={usd}
+            onChange={keyInputChange}
+            placeholder="0.00 USD" 
+            required
+          />
+          <button onClick={onClick}>trans</button>
           <p>
-            {
-              idx === coins.id ? coins.quotes.USD.price : idx
+            {usdloading ?
+              <span>You can buy {transCoin} coin!</span> : 
+              LIST_LOAD_ERROR
             }
-          </p> 
-        }
-        <input>여기에 변환할 값을 넣어라</input>
+          </p>
+        </div>
       </form>
     </div>
   );
